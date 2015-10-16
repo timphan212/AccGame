@@ -1,16 +1,21 @@
 package com.example.accelerometer;
 
+import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "com.example.accelerometer.MainActivity";
+    private PowerManager.WakeLock mWakeLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        PowerManager mPowerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        mWakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, TAG);
     }
 
     @Override
@@ -33,5 +38,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mWakeLock.acquire();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mWakeLock.release();
     }
 }
