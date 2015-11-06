@@ -9,13 +9,16 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "com.example.accelerometer.MainActivity";
     private PowerManager.WakeLock mWakeLock;
+    private SimulationView sv;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         PowerManager mPowerManager = (PowerManager) getSystemService(POWER_SERVICE);
         mWakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, TAG);
+        sv = new SimulationView(this);
+        setContentView(sv);
     }
 
     @Override
@@ -44,11 +47,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mWakeLock.acquire();
+        sv.startSimulation();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mWakeLock.release();
+        sv.stopSimulation();
     }
 }
